@@ -1,0 +1,97 @@
+<?php
+
+$key = ""; // supplied by PTV
+$developerId = ; // supplied by PTV
+
+$date = gmdate('Y-m-d\TH:i:s\Z');
+$healthcheckurl = "/v2/healthcheck?timestamp=" . $date;
+$disruptions ="/v3/disruptions";
+$routes ="/v3/Routes";
+$fares ="/v3/fare_estimate/min_zone/1/max_zone/1";
+$stop1 ="/v3/departures/route_type/0/stop/1001";
+
+
+$stopsurl = "/v3/departures/route_type/0/stop/1001";
+$generalurl = "/v2/mode/2/stop/23806/departures/by-destination/limit/1";
+$specificurl = "/v2/mode/2/line/783/stop/23806/directionid/46/departures/all/limit/1";
+
+?>
+<h1>Health Check</h1>
+
+<? 
+$signedUrl = generateURLWithDevIDAndKey($healthcheckurl, $developerId, $key);
+drawResponse($signedUrl);
+?>
+<h1>Fares from Collingwood</h1>
+
+<? 
+$signedUrl = generateURLWithDevIDAndKey($fares, $developerId, $key);
+drawResponse($signedUrl);
+?>
+
+
+<h1>disruptions</h1>
+<? 
+$signedUrl = generateURLWithDevIDAndKey($disruptions, $developerId, $key);
+drawResponse($signedUrl);
+?>
+<h1>Routes types</h1>
+<? 
+$signedUrl = generateURLWithDevIDAndKey($routes, $developerId, $key);
+drawResponse($signedUrl);
+?>
+<h1>Near Me</h1>
+<? 
+$signedUrl = generateURLWithDevIDAndKey($nearmeurl, $developerId, $key);
+drawResponse($signedUrl);
+?>
+<h1>Stops for Line</h1>
+<? 
+$signedUrl = generateURLWithDevIDAndKey($stopsurl, $developerId, $key);
+drawResponse($signedUrl);
+?>
+<h1>General Next Departures</h1>
+<? 
+$signedUrl = generateURLWithDevIDAndKey($generalurl, $developerId, $key);
+drawResponse($signedUrl);
+?>
+<h1>Specific Next Departures</h1>
+<? 
+$signedUrl = generateURLWithDevIDAndKey($specificurl, $developerId, $key);
+drawResponse($signedUrl);
+
+function generateURLWithDevIDAndKey($apiEndpoint, $developerId, $key)
+{
+	// append developer ID to API endpoint URL
+	if (strpos($apiEndpoint, '?') > 0)
+	{
+		$apiEndpoint .= "&";
+	}
+	else
+	{
+		$apiEndpoint .= "?";
+	}
+	$apiEndpoint .= "devid=" . $developerId;
+ 
+	// hash the endpoint URL
+	$signature = strtoupper(hash_hmac("sha1", $apiEndpoint, $key, false));
+ 
+	// add API endpoint, base URL and signature together
+	return "https://timetableapi.ptv.vic.gov.au" . $apiEndpoint . "&signature=" . $signature;
+}
+
+function drawResponse($signedUrl)
+{
+   // echo "<p>$signedUrl</p>";//
+   echo "<textarea rows=\"10\" cols=\"100\">";
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $signedUrl); 
+    curl_setopt($ch, CURLOPT_TIMEOUT, '3'); 
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    echo $xmlstr = curl_exec($ch); 
+    curl_close($ch);
+    
+    echo "</textarea>";
+}
+?>
