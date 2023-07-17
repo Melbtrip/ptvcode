@@ -1,0 +1,35 @@
+{"status":"success","data":[
+       {
+    "min_zone":1,
+    "max_zone":1,
+    "PassengerType":"Concession",
+    "Fare2HourPeak":2.50,
+    "FareDailyPeak":10.0
+},
+{
+    "min_zone":1,
+    "max_zone":1,
+    "PassengerType":"Full Fare",
+    "Fare2HourPeak":5.0,
+    "FareDailyPeak":10.0
+    
+}
+  , 
+    {
+    "min_zone":1,
+    "max_zone":2,
+    "PassengerType":"Concession",
+    "Fare2HourPeak":2.50,
+    "FareDailyPeak":10.0
+},
+{
+    "min_zone":1,
+    "max_zone":2,
+    "PassengerType":"Full Fare",
+    "Fare2HourPeak":5.0,
+    "FareDailyPeak":10.0
+    
+}
+    
+    ]
+    ,"message":"Successfully! All records has been fetched."}
